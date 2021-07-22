@@ -9,7 +9,7 @@ const TechListModal = () => {
         getTechs();
     }, [])
 
-    const getTechs = async () => {
+    const getTechs = () => {
         setLoading(true);
         fetch('/techs')
             .then((res) => res.json())

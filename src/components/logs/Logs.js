@@ -1,22 +1,29 @@
 import { useState, useEffect } from 'react'
+import { connect } from 'react-redux'
 import LogItem from './LogItem'
+import PropTypes from 'prop-types'
+import { getLogs } from '../../actions/logActions'
 
-const Logs = () => {
-    const [logs, setLogs] = useState([]);
-    const [loading, setLoading] = useState(false);
+const Logs = ({ log: { logs, loading }, getLogs }) => {
+    // const [logs, setLogs] = useState([]);
+    // const [loading, setLoading] = useState(false);
 
     useEffect(() => {
         getLogs();
     }, [])
 
-    const getLogs = async () => {
-        setLoading(true);
-        fetch('/logs')
-            .then((res) => res.json())
-            .then((data) => {
-                setLogs(data);
-                setLoading(false);
-            })
+    // const getLogs = () => {
+    //     setLoading(true);
+    //     fetch('/logs')
+    //         .then((res) => res.json())
+    //         .then((data) => {
+    //             setLogs(data);
+    //             setLoading(false);
+    //         })
+    // }
+
+    if (loading || logs === null) {
+        return null
     }
 
     return (
@@ -33,4 +40,13 @@ const Logs = () => {
     )
 }
 
-export default Logs
+Logs.propTypes = {
+    log: PropTypes.object.isRequired,
+    getLogs: PropTypes.func.isRequired
+}
+
+const mapStateToProps = state => ({
+    log: state.log
+})
+
+export default connect(mapStateToProps, { getLogs })(Logs)
