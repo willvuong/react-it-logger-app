@@ -1,4 +1,13 @@
-import { GET_LOGS, SET_LOADING, LOGS_ERROR, ADD_LOG, DELETE_LOG} from './types'
+import { 
+    GET_LOGS, 
+    SET_LOADING, 
+    LOGS_ERROR, 
+    ADD_LOG, 
+    DELETE_LOG, 
+    UPDATE_LOG, 
+    SET_CURRENT, 
+    CLEAR_CURRENT
+} from './types'
 
 // getting logs from API server
 // export const getLogs = () => {
@@ -65,8 +74,7 @@ export const deleteLog = (id) => dispatch => {
         setLoading();
 
         fetch(`/logs/${id}`, {
-            method: 'DELETE',
-            
+            method: 'DELETE'
         })
                     
         dispatch({
@@ -79,6 +87,48 @@ export const deleteLog = (id) => dispatch => {
             type: LOGS_ERROR,
             payload: err.response.data
         })
+    }
+}
+
+export const updateLog = (log) => dispatch => {
+    try {
+        setLoading();
+
+        fetch(`/logs/${log.id}`, {
+            method: 'PUT',
+            body: JSON.stringify(log),
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+            .then((res) => res.json())
+            .then((data => {
+                dispatch({
+                    type: UPDATE_LOG,
+                    payload: data
+                })
+            }))
+                    
+        
+
+    } catch (err) {
+        dispatch({
+            type: LOGS_ERROR,
+            payload: err.response.data
+        })
+    }
+}
+
+export const setCurrent = (log) => {
+    return {
+        type: SET_CURRENT,
+        payload: log
+    }
+}
+
+export const clearCurrent = () => {
+    return {
+        type: CLEAR_CURRENT
     }
 }
 
